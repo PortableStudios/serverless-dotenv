@@ -1,7 +1,7 @@
 import yargs from 'yargs';
 import Listr from 'listr';
 
-import { parseEnvMappings, findFile } from './envMap';
+import { parseEnvMappings, findFile, writeFile } from './envMap';
 import { fetchExports } from './aws';
 
 export interface Options {
@@ -41,19 +41,27 @@ export async function createEnv(options: Options) {
   const tasks = new Listr([
     {
       title: 'Searching for envMap.yml',
-      task: () => findFile(options)
+      task: (_ctx) => {
+        findFile(options)
+      }
     },
     {
       title: 'Parsing ENV to Cloudformation mappings',
-      task: () => parseEnvMappings(options)
+      task: (ctx) => {
+        const mappings = parseEnvMappings(options)
+        ctx.mappings = mappings
+      }
     },
     {
       title: 'Fetch exports from Cloudfront',
-      task: () => fetchExports(options),
+      task: (ctx) => {
+        const mappings = fetchExports(ctx.mappings, options)
+        ctx.mappings = mappings 
+      }
     },
     {
       title: 'Writing .env file for stage',
-      task: () => {}
+      task: (ctx) => writeFile(ctx.mappings, options)
     }
   ]);
 
