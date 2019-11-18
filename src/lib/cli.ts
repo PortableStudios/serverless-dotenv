@@ -3,6 +3,8 @@ import Listr from 'listr';
 import YAML from 'yaml';
 import fs from 'fs';
 
+import { Dictionary, interpolateValue } from './dictionary';
+
 interface Options {
   stage: string,
   profile: string,
@@ -41,25 +43,16 @@ async function fetchExports(options: Options) {
   console.log(profile, stage);
 }
 
-type EnvDictionary = { [envVariable: string]: string; }
-
-function parseFile(filePath: string): EnvDictionary {
+function parseFile(filePath: string): Dictionary {
   const fileContents = fs.readFileSync(filePath, 'utf8')
   return YAML.parse(fileContents);
-}
-
-function interpolateStage(yaml: EnvDictionary, stage: string) {
-  for (const [ key, value ] of Object.entries(yaml)) {
-    yaml[key] = value.replace('${stage}', stage)
-  }
-  return yaml;
 }
 
 async function parseEnvMappings(options: Options) {
   const { envMapFile, stage } = options;
 
   const yaml = parseFile(envMapFile);
-  const processedYaml = interpolateStage(yaml, stage);
+  const processedYaml = interpolateValue(yaml, 'stage', stage);
   console.log(processedYaml);
 }
 
@@ -91,6 +84,10 @@ export async function createEnv(options: Options) {
       task: () => {}
     }
   ]);
- 
-  await tasks.run();
+
+  try {
+    await tasks.run();
+  } catch (error) {
+    process.exit(1);
+  }
 }
