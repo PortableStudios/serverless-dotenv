@@ -22,7 +22,7 @@ export function writeFile(mappings: any, options: Options) {
   fs.writeFileSync(envFile, data)
 }
 
-export async function parseEnvMappings(options: Options) {
+export function parseEnvMappings(options: Options) {
   const { envMapFile, stage } = options
 
   const yaml = parseFile(envMapFile)

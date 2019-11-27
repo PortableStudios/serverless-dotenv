@@ -4,16 +4,24 @@ import { Options } from './cli'
 
 function initCloudFormation(profile: string): AWS.CloudFormation {
   const credentials = new AWS.SharedIniFileCredentials({ profile });
+  const region = 'ap-southeast-2';
 
-  AWS.config.credentials = credentials;
-  AWS.config.region = 'ap-southeast-2';
-
-  return new AWS.CloudFormation();
+  const config = {
+    credentials,
+    region
+  }
+  return new AWS.CloudFormation(config);
 }
 
 export async function fetchExports(_mappings: any, options: Options) {
   const { profile } = options
   const cloudFormation = initCloudFormation(profile)
 
-  await cloudFormation.listExports().promise()
+  try {
+    return cloudFormation
+      .listExports()
+      .promise()
+  } catch (error) {
+    return Promise.reject(error)
+  }
 }
