@@ -1,64 +1,68 @@
-import yargs from 'yargs';
 import Listr from 'listr';
+import yargs from 'yargs';
 
-import { parseEnvMappings, findFile } from './envMap';
 import { fetchExports } from './aws';
+import { findFile, parseEnvMappings } from './envMap';
 
 export interface Options {
-  stage: string,
-  profile: string,
-  envMapFile: string,
+  readonly stage: string;
+  readonly profile: string;
+  readonly envMapFile: string;
 }
 
-export function args(args: string[]): Options {
+export function args(cliArgs: readonly string[]): Options {
   const options = yargs
     .option('stage', {
       demandOption: true,
-      type: 'string',
+      describe: 'The stage you have provided for your serverless deploy.',
       requiresArg: true,
-      describe: 'The stage you have provided for your serverless deploy.'
+      type: 'string'
     })
     .option('profile', {
       demandOption: true,
-      type: 'string',
+      describe: 'Your AWS profile as stored in your AWS credentials.',
       requiresArg: true,
-      describe: 'Your AWS profile as stored in your AWS credentials.'
+      type: 'string'
     })
     .option('envMapFile', {
-      type: 'string',
       default: 'envMap.yml',
+      describe:
+        'This file should contain the mapping for ENV variables to CloudFormation exports that you wish to use.',
       requiresArg: true,
-      describe: 'This file should contain the mapping for ENV variables to CloudFormation exports that you wish to use.'
+      type: 'string'
     })
     .version()
     .help()
-    .parse(args);
+    .parse(cliArgs);
 
   return options;
 }
 
-export async function createEnv(options: Options) {
+export async function createEnv(options: Options): Promise<any> {
   const tasks = new Listr([
     {
-      title: 'Searching for envMap.yml',
-      task: (_ctx) => {
-        findFile(options)
-      }
+      // tslint:disable-next-line
+      task: _ctx => {
+        return findFile(options);
+      },
+      title: 'Searching for envMap.yml'
     },
     {
-      title: 'Parsing ENV to Cloudformation mappings',
-      task: (ctx) => {
-        const mappings = parseEnvMappings(options)
-        ctx.mappings = mappings
-      }
+      task: ctx => {
+        const mappings = parseEnvMappings(options);
+        // tslint:disable-next-line
+        ctx.mappings = mappings;
+      },
+      title: 'Parsing ENV to Cloudformation mappings'
     },
     {
-      title: 'Fetch exports from Cloudfront',
-      task: async (ctx) => {
-        const results = await fetchExports(ctx.mappings, options)
-        ctx.mappings = results
-      }
-    },
+      task: async ctx => {
+        const results = await fetchExports(ctx.mappings, options);
+        // tslint:disable-next-line
+        ctx.mappings = results;
+      },
+      title: 'Fetch exports from Cloudfront'
+    }
     // {
     //   title: 'Writing .env file for stage',
     //   task: (ctx) => writeFile(ctx.mappings, options)
@@ -66,8 +70,8 @@ export async function createEnv(options: Options) {
   ]);
 
   try {
-    await tasks.run()
+    return await tasks.run();
   } finally {
-    process.exit(1)
+    process.exit(1);
   }
 }

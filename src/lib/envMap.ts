@@ -1,38 +1,41 @@
-import YAML from 'yaml'
-import fs from 'fs'
+import fs from 'fs';
+import YAML from 'yaml';
 
-import { Options } from './cli'
-import { Dictionary, interpolateValue } from './dictionary'
+import { Options } from './cli';
+import { Dictionary, interpolateValue } from './dictionary';
 
-export function findFile(options: Options) {
-  const { envMapFile } = options
+export function findFile(options: Options): boolean {
+  const { envMapFile } = options;
 
+  // tslint:disable-next-line
   if (!fs.existsSync(envMapFile)) {
-    throw new Error(`Cannot find ${envMapFile}. Please use option --envMapFile to provide the correct YAML file.`)
+    throw new Error(
+      `Cannot find ${envMapFile}. Please use option --envMapFile to provide the correct YAML file.`
+    );
   }
-  return true
+  return true;
 }
 
-export function writeFile(mappings: any, options: Options) {
-  const { stage } = options
-  const envFile = `.env.${stage}`
+export function writeFile(mappings: any, options: Options): void {
+  const { stage } = options;
+  const envFile = `.env.${stage}`;
 
-  const data = mappings
+  const data = mappings;
 
-  fs.writeFileSync(envFile, data)
+  return fs.writeFileSync(envFile, data);
 }
 
-export function parseEnvMappings(options: Options) {
-  const { envMapFile, stage } = options
+export function parseEnvMappings(options: Options): Dictionary {
+  const { envMapFile, stage } = options;
 
-  const yaml = parseFile(envMapFile)
-  const processedYaml = interpolateValue(yaml, 'stage', stage)
+  const yaml = parseFile(envMapFile);
+  const processedYaml = interpolateValue(yaml, 'stage', stage);
 
-  return processedYaml
+  return processedYaml;
 }
 
 function parseFile(filePath: string): Dictionary {
-  const fileContents = fs.readFileSync(filePath, 'utf8')
+  const fileContents = fs.readFileSync(filePath, 'utf8');
 
-  return YAML.parse(fileContents)
+  return YAML.parse(fileContents);
 }
