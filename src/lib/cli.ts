@@ -1,3 +1,5 @@
+// tslint:disable:no-object-mutation
+
 import Listr from 'listr';
 import yargs from 'yargs';
 
@@ -43,23 +45,24 @@ export async function createEnv(options: Options): Promise<any> {
     {
       // tslint:disable-next-line
       task: _ctx => {
-        return findFile(options);
+        const foundFile = findFile(options);
+        return Promise.resolve(foundFile)
       },
       title: 'Searching for envMap.yml'
     },
     {
       task: ctx => {
         const mappings = parseEnvMappings(options);
-        // tslint:disable-next-line
         ctx.mappings = mappings;
+        return Promise.resolve(true)
       },
       title: 'Parsing ENV to Cloudformation mappings'
     },
     {
       task: async ctx => {
-        const results = await fetchExports(ctx.mappings, options);
-        // tslint:disable-next-line
-        ctx.mappings = results;
+        const exports = await fetchExports(options);
+        ctx.exports = exports;
+        return Promise.resolve(true)
       },
       title: 'Fetch exports from Cloudfront'
     }
