@@ -14,8 +14,7 @@ function initCloudFormation(profile: string): AWS.CloudFormation {
   return new AWS.CloudFormation(config);
 }
 
-// tslint:disable-next-line
-export async function fetchExports(_mappings: any, options: Options) {
+export async function fetchExports(options: Options): Promise<readonly AWS.CloudFormation.Export[] | undefined> {
   const { profile } = options;
   const cloudFormation = initCloudFormation(profile);
 
