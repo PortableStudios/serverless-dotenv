@@ -1,4 +1,5 @@
 // tslint:disable:no-object-mutation
+// tslint:disable:no-expression-statement
 
 import Listr from 'listr';
 import yargs from 'yargs';
@@ -53,7 +54,7 @@ export async function createEnv(options: Options): Promise<any> {
       task: ctx => {
         const mappings = parseEnvMappings(options);
         ctx.mappings = mappings;
-        return Promise.resolve(true)
+        return Promise.resolve(true);
       },
       title: 'Parsing ENV to Cloudformation mappings'
     },
@@ -61,12 +62,12 @@ export async function createEnv(options: Options): Promise<any> {
       task: async ctx => {
         const exports = await fetchExports(options);
         ctx.exports = exports;
-        return Promise.resolve(true)
+        return Promise.resolve(true);
       },
       title: 'Fetch exports from Cloudfront'
     },
     {
-      task: (ctx) => writeFile(ctx.mappings, options),
+      task: ctx => writeFile(ctx.mappings, options),
       title: 'Writing .env file for stage'
     }
   ]);

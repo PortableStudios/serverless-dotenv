@@ -14,7 +14,9 @@ function initCloudFormation(profile: string): AWS.CloudFormation {
   return new AWS.CloudFormation(config);
 }
 
-export async function fetchExports(options: Options): Promise<readonly AWS.CloudFormation.Export[] | undefined> {
+export async function fetchExports(
+  options: Options
+): Promise<readonly AWS.CloudFormation.Export[] | undefined> {
   const { profile } = options;
   const cloudFormation = initCloudFormation(profile);
 
@@ -30,12 +32,13 @@ export function replaceExportNamesWithValues(
   exports: readonly AWS.CloudFormation.Export[]
 ): Dictionary {
   for (const [primaryKey, primaryValue] of Object.entries(mappings)) {
-    const foundExport = exports.find(element => element.Name === primaryValue)
+    const foundExport = exports.find(element => element.Name === primaryValue);
     if (foundExport) {
       // tslint:disable-next-line
-      mappings[primaryKey] = foundExport.Value || ''
+      mappings[primaryKey] = foundExport.Value || '';
     } else {
-      delete mappings[primaryKey]
+      // tslint:disable-next-line
+      delete mappings[primaryKey];
     }
   }
   return mappings;

@@ -7,19 +7,22 @@ import { Dictionary, interpolateValue } from './dictionary';
 export function findFile(options: Options): Promise<boolean> {
   const { envMapFile } = options;
 
-  return fs.existsSync(envMapFile) ? Promise.resolve(true) : Promise.reject(new Error(
-    `Cannot find ${envMapFile}. Please use option --envMapFile to provide the correct YAML file.`
-  ))
+  return fs.existsSync(envMapFile)
+    ? Promise.resolve(true)
+    : Promise.reject(
+        new Error(
+          `Cannot find ${envMapFile}. Please use option --envMapFile to provide the correct YAML file.`
+        )
+      );
 }
 
 export function writeFile(mappings: Dictionary, options: Options): void {
   const { stage } = options;
   const envFile = `.env.${stage}`;
 
-  const data = Object
-    .entries(mappings)
+  const data = Object.entries(mappings)
     .map(value => `${value[0]}=${value[1]}`)
-    .join("\n");
+    .join('\n');
 
   return fs.writeFileSync(envFile, data);
 }
