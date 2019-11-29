@@ -18,9 +18,9 @@ export async function fetchExports(_mappings: any, options: Options) {
   const { profile } = options;
   const cloudFormation = initCloudFormation(profile);
 
-  try {
-    return cloudFormation.listExports().promise();
-  } catch (error) {
-    return Promise.reject(error);
-  }
+  return cloudFormation
+    .listExports()
+    .promise()
+    .then(result => result.Exports)
+    .catch(error => Promise.reject(error));
 }
