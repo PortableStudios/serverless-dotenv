@@ -1,7 +1,7 @@
 import Listr from 'listr';
 import yargs from 'yargs';
 
-import { fetchExports } from './aws';
+import { fetchExports, replaceExportNamesWithValues } from './aws';
 import { findFile, parseEnvMappings, writeFile } from './envMap';
 
 export interface Options {
@@ -38,7 +38,7 @@ export function args(cliArgs: readonly string[]): Options {
   return options;
 }
 
-export async function createEnv(options: Options): Promise<any> {
+export function createEnv(options: Options): Promise<any> {
   const tasks = new Listr([
     {
       task: () => {
@@ -51,28 +51,38 @@ export async function createEnv(options: Options): Promise<any> {
         const mappings = parseEnvMappings(options);
         // tslint:disable-next-line
         ctx.mappings = mappings;
-        return Promise.resolve(true);
       },
-      title: 'Parsing ENV to Cloudformation mappings'
+      title: 'Parsing ENV to CloudFormation mappings'
     },
     {
       task: async ctx => {
         const exports = await fetchExports(options);
         // tslint:disable-next-line
         ctx.exports = exports;
-        return Promise.resolve(true);
       },
-      title: 'Fetch exports from Cloudfront'
+      title: 'Fetch exports from CloudFormation'
     },
     {
-      task: ctx => writeFile(ctx.mappings, options),
+      task: ctx => {
+        const cloudFormationMappings = replaceExportNamesWithValues(
+          ctx.mappings,
+          ctx.exports
+        );
+        switch (cloudFormationMappings._tag) {
+          case 'Left':
+            return Promise.reject(cloudFormationMappings.left)
+          case 'Right':
+            // tslint:disable-next-line
+            return Promise.resolve(ctx.cloudFormationMappings = cloudFormationMappings.right)
+        }
+      },
+      title: 'Replace mapping values with CloudFormation values'
+    },
+    {
+      task: ctx => writeFile(ctx.cloudFormationMappings, options),
       title: 'Writing .env file for stage'
     }
   ]);
 
-  try {
-    return await tasks.run();
-  } finally {
-    process.exit(1);
-  }
+  return tasks.run();
 }

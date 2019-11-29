@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import { Either, left, right } from 'fp-ts/lib/Either'
 
 import { Options } from './cli';
 import { Dictionary } from './dictionary';
@@ -30,8 +31,8 @@ export async function fetchExports(
 export function replaceExportNamesWithValues(
   mappings: Dictionary,
   exports: readonly AWS.CloudFormation.Export[]
-): Dictionary {
-  return Object.entries(mappings).reduce((acc, elem) => {
+): Either<Error, Dictionary> {
+  const result = Object.entries(mappings).reduce((acc, elem) => {
     const [primaryKey, primaryValue] = elem;
 
     const foundExport = exports.find(element => element.Name === primaryValue);
@@ -42,4 +43,7 @@ export function replaceExportNamesWithValues(
         }
       : acc;
   }, {});
+  return Object.keys(mappings).length === Object.keys(result).length
+    ? right(result)
+    : left(new Error('Not all keys could be found in CloudFormation exports.'))
 }
