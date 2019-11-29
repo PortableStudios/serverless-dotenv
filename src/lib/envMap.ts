@@ -4,16 +4,12 @@ import YAML from 'yaml';
 import { Options } from './cli';
 import { Dictionary, interpolateValue } from './dictionary';
 
-export function findFile(options: Options): boolean {
+export function findFile(options: Options): Promise<boolean> {
   const { envMapFile } = options;
 
-  // tslint:disable-next-line
-  if (!fs.existsSync(envMapFile)) {
-    throw new Error(
-      `Cannot find ${envMapFile}. Please use option --envMapFile to provide the correct YAML file.`
-    );
-  }
-  return true;
+  return fs.existsSync(envMapFile) ? Promise.resolve(true) : Promise.reject(new Error(
+    `Cannot find ${envMapFile}. Please use option --envMapFile to provide the correct YAML file.`
+  ))
 }
 
 export function writeFile(mappings: Dictionary, options: Options): void {

@@ -45,8 +45,7 @@ export async function createEnv(options: Options): Promise<any> {
     {
       // tslint:disable-next-line
       task: _ctx => {
-        const foundFile = findFile(options);
-        return Promise.resolve(foundFile)
+        return findFile(options);
       },
       title: 'Searching for envMap.yml'
     },
