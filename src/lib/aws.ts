@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { Either, left, right } from 'fp-ts/lib/Either'
+import { Either, left, right } from 'fp-ts/lib/Either';
 
 import { Options } from './cli';
 import { Dictionary } from './dictionary';
@@ -36,6 +36,7 @@ export function replaceExportNamesWithValues(
     const [primaryKey, primaryValue] = elem;
 
     const foundExport = exports.find(element => element.Name === primaryValue);
+
     return foundExport
       ? {
           ...acc,
@@ -43,7 +44,8 @@ export function replaceExportNamesWithValues(
         }
       : acc;
   }, {});
+
   return Object.keys(mappings).length === Object.keys(result).length
     ? right(result)
-    : left(new Error('Not all keys could be found in CloudFormation exports.'))
+    : left(new Error('Not all keys could be found in CloudFormation exports.'));
 }

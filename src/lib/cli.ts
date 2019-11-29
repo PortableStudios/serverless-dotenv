@@ -70,10 +70,12 @@ export function createEnv(options: Options): Promise<any> {
         );
         switch (cloudFormationMappings._tag) {
           case 'Left':
-            return Promise.reject(cloudFormationMappings.left)
+            return Promise.reject(cloudFormationMappings.left);
           case 'Right':
-            // tslint:disable-next-line
-            return Promise.resolve(ctx.cloudFormationMappings = cloudFormationMappings.right)
+            return Promise.resolve(
+              // tslint:disable-next-line
+              (ctx.cloudFormationMappings = cloudFormationMappings.right)
+            );
         }
       },
       title: 'Replace mapping values with CloudFormation values'
