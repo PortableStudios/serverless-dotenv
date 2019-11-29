@@ -1,6 +1,3 @@
-// tslint:disable:no-object-mutation
-// tslint:disable:no-expression-statement
-
 import Listr from 'listr';
 import yargs from 'yargs';
 
@@ -44,8 +41,7 @@ export function args(cliArgs: readonly string[]): Options {
 export async function createEnv(options: Options): Promise<any> {
   const tasks = new Listr([
     {
-      // tslint:disable-next-line
-      task: _ctx => {
+      task: () => {
         return findFile(options);
       },
       title: 'Searching for envMap.yml'
@@ -53,6 +49,7 @@ export async function createEnv(options: Options): Promise<any> {
     {
       task: ctx => {
         const mappings = parseEnvMappings(options);
+        // tslint:disable-next-line
         ctx.mappings = mappings;
         return Promise.resolve(true);
       },
@@ -61,6 +58,7 @@ export async function createEnv(options: Options): Promise<any> {
     {
       task: async ctx => {
         const exports = await fetchExports(options);
+        // tslint:disable-next-line
         ctx.exports = exports;
         return Promise.resolve(true);
       },
