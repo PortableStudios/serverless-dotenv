@@ -1,6 +1,5 @@
 export interface Dictionary {
-  // tslint:disable-next-line
-  [key: string]: string;
+  readonly [key: string]: string;
 }
 
 export function interpolateValue(
@@ -8,9 +7,11 @@ export function interpolateValue(
   key: string,
   value: string
 ): Dictionary {
-  for (const [primaryKey, primaryValue] of Object.entries(dictionary)) {
-    // tslint:disable-next-line
-    dictionary[primaryKey] = primaryValue.replace('${' + key + '}', value);
-  }
-  return dictionary;
+  return Object.entries(dictionary).reduce((acc, elem) => {
+    const [primaryKey, primaryValue] = elem;
+    return {
+      ...acc,
+      [primaryKey]: primaryValue.replace('${' + key + '}', value)
+    };
+  }, {});
 }

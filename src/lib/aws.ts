@@ -31,15 +31,15 @@ export function replaceExportNamesWithValues(
   mappings: Dictionary,
   exports: readonly AWS.CloudFormation.Export[]
 ): Dictionary {
-  for (const [primaryKey, primaryValue] of Object.entries(mappings)) {
+  return Object.entries(mappings).reduce((acc, elem) => {
+    const [primaryKey, primaryValue] = elem;
+
     const foundExport = exports.find(element => element.Name === primaryValue);
-    if (foundExport) {
-      // tslint:disable-next-line
-      mappings[primaryKey] = foundExport.Value || '';
-    } else {
-      // tslint:disable-next-line
-      delete mappings[primaryKey];
-    }
-  }
-  return mappings;
+    return foundExport
+      ? {
+          ...acc,
+          [primaryKey]: foundExport.Value || ''
+        }
+      : acc;
+  }, {});
 }
