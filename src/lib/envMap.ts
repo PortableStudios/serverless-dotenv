@@ -16,11 +16,14 @@ export function findFile(options: Options): boolean {
   return true;
 }
 
-export function writeFile(mappings: any, options: Options): void {
+export function writeFile(mappings: Dictionary, options: Options): void {
   const { stage } = options;
   const envFile = `.env.${stage}`;
 
-  const data = mappings;
+  const data = Object
+    .entries(mappings)
+    .map(value => `${value[0]}=${value[1]}`)
+    .join("\n");
 
   return fs.writeFileSync(envFile, data);
 }

@@ -4,7 +4,7 @@ import Listr from 'listr';
 import yargs from 'yargs';
 
 import { fetchExports } from './aws';
-import { findFile, parseEnvMappings } from './envMap';
+import { findFile, parseEnvMappings, writeFile } from './envMap';
 
 export interface Options {
   readonly stage: string;
@@ -65,11 +65,11 @@ export async function createEnv(options: Options): Promise<any> {
         return Promise.resolve(true)
       },
       title: 'Fetch exports from Cloudfront'
+    },
+    {
+      task: (ctx) => writeFile(ctx.mappings, options),
+      title: 'Writing .env file for stage'
     }
-    // {
-    //   title: 'Writing .env file for stage',
-    //   task: (ctx) => writeFile(ctx.mappings, options)
-    // }
   ]);
 
   try {
