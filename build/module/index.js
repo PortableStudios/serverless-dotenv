@@ -1,0 +1,5 @@
+import { args, createEnv } from './lib/cli';
+const options = args(process.argv);
+// tslint:disable-next-line:no-expression-statement
+createEnv(options);
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zcmMvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxFQUFFLElBQUksRUFBRSxTQUFTLEVBQUUsTUFBTSxXQUFXLENBQUM7QUFFNUMsTUFBTSxPQUFPLEdBQUcsSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsQ0FBQztBQUNuQyxtREFBbUQ7QUFDbkQsU0FBUyxDQUFDLE9BQU8sQ0FBQyxDQUFDIn0=
