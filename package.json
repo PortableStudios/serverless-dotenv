@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Pass outputs from serverless to dotenv",
   "main": "build/main/index.js",
+  "bin": "bin/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
   "repository": "https://github.com/cdaloisio/serverless-env",
