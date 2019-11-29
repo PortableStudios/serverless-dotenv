@@ -3,7 +3,7 @@
 with pkgs;
 
 pkgs.stdenv.mkDerivation {
-  name = "serverlessEnvEnv";
+  name = "serverlessDotenvEnv";
   buildInputs = [
     nodejs-10_x
     yarn
