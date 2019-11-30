@@ -4,6 +4,19 @@ Auto-generate your dotenv configuration from serverless framework exports.
 
 ---
 
+This CLI tool was created to assist when it came to deploying
+applications using the serverless framework *and* attempting to
+integrate it with a non-serverless based client-side application.
+
+It means that you can:
+
+- use the serverless framework to implement a multistack approach for
+  your application
+- get access to anything that you give a named export to in
+  CloudFormation
+- output that to a dotenv file that can be used when you build your
+  client-side application
+
 ## Installation
 
 Use yarn to either:
