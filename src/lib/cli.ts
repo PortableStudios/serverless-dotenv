@@ -7,6 +7,7 @@ import { findFile, parseEnvMappings, writeFile } from './envMap';
 export interface Options {
   readonly stage: string;
   readonly profile: string;
+  readonly region: string;
   readonly envMapFile: string;
 }
 
@@ -21,6 +22,12 @@ export function args(cliArgs: readonly string[]): Options {
     .option('profile', {
       demandOption: true,
       describe: 'Your AWS profile as stored in your AWS credentials.',
+      requiresArg: true,
+      type: 'string'
+    })
+    .option('region', {
+      demandOption: true,
+      describe: 'The AWS region that you are deploying to.',
       requiresArg: true,
       type: 'string'
     })

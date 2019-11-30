@@ -4,22 +4,21 @@ import { Either, left, right } from 'fp-ts/lib/Either';
 import { Options } from './cli';
 import { Dictionary } from './dictionary';
 
-function initCloudFormation(profile: string): AWS.CloudFormation {
+function initCloudFormation(options: Options): AWS.CloudFormation {
+  const { profile, region } = options;
   const credentials = new AWS.SharedIniFileCredentials({ profile });
-  const region = 'ap-southeast-2';
-
   const config = {
     credentials,
     region
   };
+
   return new AWS.CloudFormation(config);
 }
 
 export async function fetchExports(
   options: Options
 ): Promise<readonly AWS.CloudFormation.Export[] | undefined> {
-  const { profile } = options;
-  const cloudFormation = initCloudFormation(profile);
+  const cloudFormation = initCloudFormation(options);
 
   return cloudFormation
     .listExports()
@@ -34,7 +33,6 @@ export function replaceExportNamesWithValues(
 ): Either<Error, Dictionary> {
   const result = Object.entries(mappings).reduce((acc, elem) => {
     const [primaryKey, primaryValue] = elem;
-
     const foundExport = exports.find(element => element.Name === primaryValue);
 
     return foundExport
