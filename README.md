@@ -14,13 +14,13 @@ Use yarn to either:
 
 ```shell
 # Install into local package.json
-yarn add serverless-dotenv --dev
+yarn add https://github.com/cdaloisio/serverless-dotenv --dev
 
 # Install globally
-yarn global add serverless-dotenv
+yarn global add https://github.com/cdaloisio/serverless-dotenv
 
 # Run via npx without installation
-npx serverless-dotenv
+npx https://github.com/cdaloisio/serverless-dotenv
 ```
 
 ## Usage
@@ -37,7 +37,7 @@ COGNITO_USER_POOL: myapp-${stage}-cognito-user-pool
 Run serverless-dotenv with the required options.
 
 ```shell
-npx serverless-dotenv --stage {stage} --profile {profile} --region {region}
+npx https://github.com/cdaloisio/serverless-dotenv --stage {stage} --profile {profile} --region {region}
 ```
 
 It will create a `dotenv` file suffixed with the stage which you can then use in your application build.
