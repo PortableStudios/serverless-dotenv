@@ -28,6 +28,7 @@ npx serverless-dotenv
 Create an `envMap.yml` file in your project that maps environment variables to the export names in your serverless stack. You can interpolate the stage value in these export names.
 
 Example:
+
 ```yaml
 USER_UPLOADS_S3_BUCKET: myapp-${stage}-user-uploads-bucket
 COGNITO_USER_POOL: myapp-${stage}-cognito-user-pool
@@ -46,8 +47,8 @@ USER_UPLOADS_S3_BUCKET: some-s3-bucket-name
 COGNITO_USER_POOL: some-cognito-user-pool-arn
 ```
 
-
 ### Options
+
 ```shell
   --stage       The stage you have provided for your serverless deploy. [string] [required]
   --profile     Your AWS profile as stored in your AWS credentials. [string] [required]
