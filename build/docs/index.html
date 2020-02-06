@@ -69,6 +69,18 @@
 				</a>
 				<p>Auto-generate your dotenv configuration from serverless framework exports.</p>
 				<hr>
+				<p>This CLI tool was created to assist when it came to deploying
+					applications using the serverless framework <em>and</em> attempting to
+				integrate it with a non-serverless based client-side application.</p>
+				<p>It means that you can:</p>
+				<ul>
+					<li>use the serverless framework to implement a multistack approach for
+					your application</li>
+					<li>get access to anything that you give a named export to in
+					CloudFormation</li>
+					<li>output that to a dotenv file that can be used when you build your
+					client-side application</li>
+				</ul>
 				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 					<h2>Installation</h2>
 				</a>
@@ -79,13 +91,13 @@
 					<li>run via npx</li>
 				</ul>
 				<pre><code class="language-shell"><span class="hljs-meta">#</span><span class="bash"> Install into <span class="hljs-built_in">local</span> package.json</span>
-yarn add https://github.com/cdaloisio/serverless-dotenv --dev
+yarn add https://github.com/portablestudios/serverless-dotenv --dev
 <span class="hljs-meta">
 #</span><span class="bash"> Install globally</span>
-yarn global add https://github.com/cdaloisio/serverless-dotenv
+yarn global add https://github.com/portablestudios/serverless-dotenv
 <span class="hljs-meta">
 #</span><span class="bash"> Run via npx without installation</span>
-npx https://github.com/cdaloisio/serverless-dotenv</code></pre>
+npx https://github.com/portablestudios/serverless-dotenv</code></pre>
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
@@ -94,7 +106,7 @@ npx https://github.com/cdaloisio/serverless-dotenv</code></pre>
 				<pre><code class="language-yaml"><span class="hljs-attr">USER_UPLOADS_S3_BUCKET:</span> <span class="hljs-string">myapp-${stage}-user-uploads-bucket</span>
 <span class="hljs-attr">COGNITO_USER_POOL:</span> <span class="hljs-string">myapp-${stage}-cognito-user-pool</span></code></pre>
 				<p>Run serverless-dotenv with the required options.</p>
-				<pre><code class="language-shell">npx https://github.com/cdaloisio/serverless-dotenv --stage {stage} --profile {profile} --region {region}</code></pre>
+				<pre><code class="language-shell">npx https://github.com/portablestudios/serverless-dotenv --stage {stage} --profile {profile} --region {region}</code></pre>
 				<p>It will create a <code>dotenv</code> file suffixed with the stage which you can then use in your application build.</p>
 				<pre><code class="language-env">USER_UPLOADS_S3_BUCKET: some-s3-bucket-name
 COGNITO_USER_POOL: some-cognito-user-pool-arn</code></pre>
