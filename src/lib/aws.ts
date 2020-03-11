@@ -1,3 +1,5 @@
+// tslint:disable:readonly-array
+
 import AWS from 'aws-sdk';
 import { Either, left, right } from 'fp-ts/lib/Either';
 
@@ -16,15 +18,25 @@ function initCloudFormation(options: Options): AWS.CloudFormation {
 }
 
 export async function fetchExports(
-  options: Options
+  options: Options, token?: null | string, results: any[] = []
 ): Promise<readonly AWS.CloudFormation.Export[] | undefined> {
-  const cloudFormation = initCloudFormation(options);
+  const cloudFormation = initCloudFormation(options)
+  const params = token ? { NextToken: token } : {}
 
-  return cloudFormation
-    .listExports()
+  const listExportsResult = await cloudFormation
+    .listExports(params)
     .promise()
-    .then(result => result.Exports)
-    .catch(error => Promise.reject(error));
+    .then(result => result)
+    .catch(error => Promise.reject(error))
+
+  const nextToken = listExportsResult.NextToken
+  const exports = listExportsResult.Exports
+
+  const updatedResults: any[] = results.concat(exports)
+
+  return (nextToken) ?
+    fetchExports(options, nextToken, updatedResults) :
+    new Promise((resolve) => resolve(updatedResults))
 }
 
 export function replaceExportNamesWithValues(
